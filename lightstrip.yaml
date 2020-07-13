@@ -21,3 +21,24 @@ logger:
 api:
 
 ota:
+
+time:
+  - platform: sntp
+    on_time:
+      - seconds: /20
+        then:
+          - light.turn_on:
+              id: lightstrip
+              brightness: 20%
+              red: 100%
+              green: 0%
+              blue: 0%
+
+light:
+  - platform: fastled_clockless
+    chipset: WS2812B
+    pin: D5
+    id: lightstrip
+    num_leds: 150
+    rgb_order: GRB
+    name: "FastLED WS2812B Light"
