@@ -1,0 +1,23 @@
+esphome:
+  name: lightstrip
+  platform: ESP8266
+  board: nodemcu
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_pass
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Lightstrip Fallback Hotspot"
+    password: "Ot9YCmWurk5a"
+
+captive_portal:
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+
+ota:
