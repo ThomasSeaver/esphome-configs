@@ -2,6 +2,16 @@ esphome:
   name: lightstrip
   platform: ESP8266
   board: nodemcu
+  on_boot:
+    then:
+      - light.turn_on:
+          id: lightstrip
+          brightness: 0%
+          red: 100%
+          green: 0%
+          blue: 0%
+          transition_length: 200ms
+    
 
 wifi:
   ssid: !secret wifi_ssid
@@ -22,17 +32,25 @@ api:
 
 ota:
 
-time:
-  - platform: sntp
-    on_time:
-      - seconds: /20
-        then:
-          - light.turn_on:
-              id: lightstrip
-              brightness: 20%
-              red: 100%
-              green: 0%
-              blue: 0%
+
+sensor:
+  - platform: ultrasonic
+    trigger_pin: D2
+    echo_pin: D1
+    name: "Ultrasonic Sensor"
+    update_interval: 400ms
+    on_raw_value:
+      then:
+        - light.turn_on:
+            id: lightstrip
+            brightness: !lambda |-
+              ESP_LOGD("custom", "The value of sensor is: %f", x);
+              if (x > 0.005 && x < 0.6) {
+                ESP_LOGD("custom", "The corrected value is: %f", (0.6 - x) / 0.6);
+                return (0.6 - x) / 0.6;
+              } else {
+                return 0.5;
+              }
 
 light:
   - platform: fastled_clockless
